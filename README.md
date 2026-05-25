@@ -1,16 +1,49 @@
-# React + Vite
+# Trimly - Gestão para Barbearias
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sistema de gestão completo para barbearias com dashboard, agenda, clientes, serviços e financeiro.
 
-Currently, two official plugins are available:
+## Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- Vite
+- Tailwind CSS
+- React Router
+- Firebase (Firestore)
 
-## React Compiler
+## Instalação
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone o repositório
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
 
-## Expanding the ESLint configuration
+3. Configure o Firebase:
+   - Crie um projeto no [Firebase Console](https://console.firebase.google.com/)
+   - Ative o Firestore Database
+   - Copie o arquivo `.env.example` para `.env`
+   - Preencha as variáveis de ambiente com suas configurações do Firebase
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+4. Execute o projeto:
+   ```bash
+   npm run dev
+   ```
+
+## Estrutura do Projeto
+
+```
+src/
+├── components/     # Componentes reutilizáveis
+├── pages/         # Páginas da aplicação
+├── services/      # Configurações de serviços externos
+└── App.jsx        # Componente principal
+```
+
+## Funcionalidades
+
+- 📊 Dashboard com métricas gerais
+- 👤 Gestão de clientes
+- ✂️ Cadastro de serviços
+- 📅 Agenda de agendamentos
+- 💰 Controle financeiro
+- 💬 Templates de WhatsApp

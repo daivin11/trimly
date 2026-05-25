@@ -1,11 +1,18 @@
-export default function Clients({
-  clients,
-  clientName,
-  setClientName,
-  clientPhone,
-  setClientPhone,
-  addClient,
-}) {
+import { useState } from "react";
+
+export default function Clients({ clients, addClient, loading }) {
+  const [clientName, setClientName] = useState("");
+  const [clientPhone, setClientPhone] = useState("");
+  const isLoading = loading ?? false;
+
+  const handleAddClient = async () => {
+    const success = await addClient(clientName, clientPhone);
+    if (success) {
+      setClientName("");
+      setClientPhone("");
+    }
+  };
+
   return (
     <main className="flex-1 p-6 md:p-8 text-white overflow-y-auto">
       <div className="mb-8 space-y-4">
@@ -18,7 +25,7 @@ export default function Clients({
           </div>
           <div className="rounded-3xl border border-gray-800 bg-gray-900 p-4 text-center">
             <p className="text-sm uppercase tracking-[0.2em] text-gray-500">Total</p>
-            <p className="text-3xl font-bold mt-3">{clients.length}</p>
+            <p className="text-3xl font-bold mt-3">{isLoading ? "..." : clients.length}</p>
           </div>
         </div>
       </div>
@@ -28,6 +35,8 @@ export default function Clients({
           <h2 className="text-2xl font-bold mb-4">Cadastrar cliente</h2>
           <div className="grid gap-4">
             <input
+              type="text"
+              autoComplete="name"
               className="w-full bg-gray-950 border border-gray-800 rounded-2xl p-4 outline-none"
               placeholder="Nome do cliente"
               value={clientName}
@@ -35,6 +44,9 @@ export default function Clients({
             />
 
             <input
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
               className="w-full bg-gray-950 border border-gray-800 rounded-2xl p-4 outline-none"
               placeholder="Telefone com DDD"
               value={clientPhone}
@@ -43,7 +55,7 @@ export default function Clients({
 
             <button
               className="w-full bg-white text-black py-4 rounded-2xl font-semibold hover:bg-gray-200 transition"
-              onClick={addClient}
+              onClick={handleAddClient}
             >
               Adicionar cliente
             </button>
@@ -56,10 +68,14 @@ export default function Clients({
               <h2 className="text-2xl font-bold">Lista de clientes</h2>
               <p className="text-gray-400">Todos os clientes registrados para agendamento e contato.</p>
             </div>
-            <span className="text-sm text-gray-400">{clients.length} clientes</span>
+            <span className="text-sm text-gray-400">{isLoading ? "Carregando..." : `${clients.length} clientes`}</span>
           </div>
 
-          {clients.length === 0 ? (
+          {isLoading ? (
+            <div className="rounded-3xl border border-dashed border-gray-700 bg-gray-950 p-8 text-center text-gray-400">
+              Carregando clientes...
+            </div>
+          ) : clients.length === 0 ? (
             <div className="rounded-3xl border border-dashed border-gray-700 bg-gray-950 p-8 text-center text-gray-400">
               Nenhum cliente cadastrado ainda.
             </div>

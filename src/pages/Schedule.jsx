@@ -14,6 +14,7 @@ export default function Schedule({
   setAppointmentTime,
   addAppointment,
   sendWhatsApp,
+  updateAppointmentStatus,
 }) {
   const needsData = clients.length === 0 || services.length === 0;
 
@@ -124,6 +125,7 @@ export default function Schedule({
                   key={appointment.id}
                   appointment={appointment}
                   sendWhatsApp={sendWhatsApp}
+                  onStatusChange={updateAppointmentStatus}
                 />
               ))}
             </div>
