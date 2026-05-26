@@ -2,6 +2,20 @@
 
 Sistema de gestão completo para barbearias com dashboard, agenda, clientes, serviços e financeiro.
 
+# Screenshots
+
+## Dashboard
+![Dashboard](./public/screenshots/dashboard.png)
+
+## Página pública
+![Booking](./public/screenshots/agendamento.png)
+
+## Configuraçao
+![MultiBarber](./public/screenshots/config.png)
+
+## Login
+![Login](./public/screenshots/login.png)
+
 ## Tecnologias
 
 - React 19

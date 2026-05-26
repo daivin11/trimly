@@ -23,12 +23,14 @@ export default function App() {
   const [clients, setClients] = useState([]);
   const [clientsLoading, setClientsLoading] = useState(true);
   const [services, setServices] = useState([]);
+  const [barbers, setBarbers] = useState([]);
   const [appointments, setAppointments] = useState([]);
 
   
 
   const [selectedClient, setSelectedClient] = useState("");
   const [selectedService, setSelectedService] = useState("");
+  const [selectedBarber, setSelectedBarber] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
   const [appointmentTime, setAppointmentTime] = useState("");
 
@@ -39,6 +41,7 @@ export default function App() {
       setClients([]);
       setClientsLoading(false);
       setServices([]);
+      setBarbers([]);
       setAppointments([]);
       return;
     }
@@ -67,6 +70,17 @@ export default function App() {
       }
     };
 
+    const fetchBarbers = async () => {
+      try {
+        const barbersQuery = query(collection(db, "barbers"), where("ownerId", "==", user.uid));
+        const barbersSnapshot = await getDocs(barbersQuery);
+        const barbersList = barbersSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setBarbers(barbersList);
+      } catch (error) {
+        console.error("Error fetching barbers:", error);
+      }
+    };
+
     const fetchAppointments = async () => {
       try {
         const appointmentsQuery = query(collection(db, "appointments"), where("userId", "==", user.uid));
@@ -80,6 +94,7 @@ export default function App() {
 
     fetchClients();
     fetchServices();
+    fetchBarbers();
     fetchAppointments();
   }, [user]);
 
@@ -154,7 +169,7 @@ export default function App() {
   };
 
   const addAppointment = async () => {
-    if (!selectedClient || !selectedService || !appointmentDate || !appointmentTime) {
+    if (!selectedClient || !selectedService || !selectedBarber || !appointmentDate || !appointmentTime) {
       alert("Preencha todos os dados do agendamento");
       return;
     }
@@ -162,10 +177,13 @@ export default function App() {
     try {
       const client = clients.find((client) => String(client.id) === String(selectedClient));
       const service = services.find((service) => String(service.id) === String(selectedService));
+      const barber = barberOptions.find((barberItem) => String(barberItem.id) === String(selectedBarber));
 
       const newAppointment = {
         client,
         service,
+        barberId: barber?.id,
+        barberName: barber?.name,
         date: appointmentDate,
         time: appointmentTime,
         status: "pending",
@@ -179,6 +197,7 @@ export default function App() {
       setAppointments([...appointments, appointmentWithId]);
       setSelectedClient("");
       setSelectedService("");
+      setSelectedBarber("");
       setAppointmentDate("");
       setAppointmentTime("");
     } catch (error) {
@@ -241,6 +260,19 @@ export default function App() {
   const totalRevenue = appointments.reduce((total, appointment) => {
     return total + (appointment?.service?.price ?? 0);
   }, 0);
+
+  const barberOptions =
+    barbers.length > 0
+      ? barbers
+      : user
+      ? [
+          {
+            id: user.uid,
+            name: profile?.barbershopName || profile?.displayName || "Equipe principal",
+            ownerId: user.uid,
+          },
+        ]
+      : [];
 
   const location = useLocation();
   
@@ -330,10 +362,13 @@ export default function App() {
                 appointments={appointments}
                 clients={clients}
                 services={services}
+                barbers={barberOptions}
                 selectedClient={selectedClient}
                 setSelectedClient={setSelectedClient}
                 selectedService={selectedService}
                 setSelectedService={setSelectedService}
+                selectedBarber={selectedBarber}
+                setSelectedBarber={setSelectedBarber}
                 appointmentDate={appointmentDate}
                 setAppointmentDate={setAppointmentDate}
                 appointmentTime={appointmentTime}

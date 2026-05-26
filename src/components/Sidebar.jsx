@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Sidebar() {
-  const { profile } = useAuth();
+  const { profile, logout } = useAuth();
+  const navigate = useNavigate();
   const [copyMessage, setCopyMessage] = useState("");
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const publicPath = profile?.slug ? `/${profile.slug}` : "";
   const publicUrl = publicPath ? `${window.location.origin}${publicPath}` : "";
 
@@ -17,6 +19,19 @@ export default function Sidebar() {
     } catch (error) {
       console.error(error);
       setCopyMessage("Erro ao copiar");
+    }
+  };
+
+  const handleLogout = async () => {
+    setLogoutLoading(true);
+    try {
+      await logout();
+      navigate("/login", { replace: true });
+    } catch (error) {
+      console.error(error);
+      setCopyMessage("Erro ao sair");
+    } finally {
+      setLogoutLoading(false);
     }
   };
 
@@ -84,16 +99,27 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <nav className="flex flex-col gap-3 text-gray-300">
-        {navItem("/", "📊 Dashboard")}
-        {navItem("/agenda", "📅 Agenda")}
-        {navItem("/clientes", "👤 Clientes")}
-        {navItem("/servicos", "✂️ Serviços")}
-        {navItem("/barbeiros", "💈 Equipe")}
-        {navItem("/financeiro", "💰 Financeiro")}
-        {navItem("/whatsapp", "💬 WhatsApp")}
-        {navItem("/perfil", "⚙️ Perfil")}
-      </nav>
+      <div className="flex min-h-0 flex-1 flex-col justify-between gap-6">
+        <nav className="flex flex-col gap-3 text-gray-300">
+          {navItem("/", "📊 Dashboard")}
+          {navItem("/agenda", "📅 Agenda")}
+          {navItem("/clientes", "👤 Clientes")}
+          {navItem("/servicos", "✂️ Serviços")}
+          {navItem("/barbeiros", "💈 Equipe")}
+          {navItem("/financeiro", "💰 Financeiro")}
+          {navItem("/whatsapp", "💬 WhatsApp")}
+          {navItem("/perfil", "⚙️ Perfil")}
+        </nav>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          disabled={logoutLoading}
+          className="w-full rounded-2xl border border-gray-800 bg-gray-950 px-4 py-3 text-left text-sm font-semibold text-gray-300 transition hover:border-red-500/50 hover:bg-red-500/10 hover:text-red-200 disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          {logoutLoading ? "Saindo..." : "Sair"}
+        </button>
+      </div>
     </aside>
   );
 }
