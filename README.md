@@ -16,6 +16,10 @@ Sistema de gestão completo para barbearias com dashboard, agenda, clientes, ser
 ## Login
 ![Login](./public/screenshots/login.png)
 
+## Demo Online
+
+https://trimly-inky.vercel.app?_vercel_share=4uejeKgWheeEdHEhmCmUOUDL5iI2feZc
+
 ## Tecnologias
 
 - React 19
